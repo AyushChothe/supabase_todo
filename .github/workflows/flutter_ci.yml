@@ -22,6 +22,10 @@ jobs:
         with:
           flutter-version: "3.10.x"
           channel: "stable"
+          
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
 
       - name: Get dependencies
         run: flutter pub get
@@ -31,12 +35,9 @@ jobs:
 
       - name: Analyze Code
         run: flutter analyze
-        
+          
       - name: Supabase Setup
-      - uses: supabase/setup-cli@v1
-        with:
-          version: latest
-      - run: supabase start
+        run: supabase start
         
       - name: Run tests
         run: flutter test --dart-define-from-file=secrets.json
