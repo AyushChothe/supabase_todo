@@ -44,6 +44,16 @@ class TodoController {
         .map((event) => (event.map((e) => TodoModel.fromJson(e)).toList()));
   }
 
+  Future<TodoModel> getTodo(String id) async {
+    return await _client
+        .from(_todosTable)
+        .select<PostgrestMap>()
+        .eq('id', id)
+        .limit(1)
+        .single()
+        .withConverter(TodoModel.fromJson);
+  }
+
   Future<void> addTodo(TodoModel todo) async {
     return _client
         .from(_todosTable)

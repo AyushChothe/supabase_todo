@@ -13,6 +13,15 @@
             ]
         },
         {
+            "name": "Dart: Run all Tests",
+            "type": "dart",
+            "request": "launch",
+            "program": "./test/",
+            "args": [
+                "--dart-define-from-file=secrets.json"
+            ]
+        },
+        {
             "name": "supabase_todo (profile mode)",
             "request": "launch",
             "type": "dart",
