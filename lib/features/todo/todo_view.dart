@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_todo/common/hooks/useUser/use_user.dart';
+import 'package:supabase_todo/common/models/todo.dart';
 import 'package:supabase_todo/features/auth/controller/auth_controller.dart';
 import 'package:supabase_todo/features/todo/controller/todo_controller.dart';
 import 'package:supabase_todo/features/todo/widgets/todo_tile.dart';
-import 'package:supabase_todo/models/todo.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
 
 class HomePage extends HookConsumerWidget {
@@ -28,8 +28,8 @@ class HomePage extends HookConsumerWidget {
             onPressed: () {
               if (user == null)
                 auth.signInWithPassword(
-                  email: "ayushmchothe@gmail.com",
-                  password: "Ayush123",
+                  email: "test@gmail.com",
+                  password: "test",
                 );
               else
                 auth.signOut();
@@ -51,16 +51,19 @@ class HomePage extends HookConsumerWidget {
         ],
       ),
       body: todosStream.when(
-        data: (todos) => Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ListView.builder(
-            itemCount: todos.length,
-            itemBuilder: (context, i) => ProviderScope(
-              overrides: [todoProvider.overrideWithValue(todos[i])],
-              child: TodoTile(),
+        data: (todos) {
+          print(todos);
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListView.builder(
+              itemCount: todos.length,
+              itemBuilder: (context, i) => ProviderScope(
+                overrides: [todoProvider.overrideWithValue(todos[i])],
+                child: TodoTile(),
+              ),
             ),
-          ),
-        ),
+          );
+        },
         error: (e, st) => Center(
           child: Text(todosStream.error.toString()),
         ),

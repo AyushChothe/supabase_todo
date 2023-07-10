@@ -5,6 +5,7 @@ import 'package:supabase_todo/common/constants/constants.dart';
 import 'package:supabase_todo/features/todo/todo_view.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   // Initialize Supabase
   (await Supabase.initialize(url: supabaseUrl, anonKey: supabaseKey));
   runApp(ProviderScope(child: const MyApp()));

@@ -1,16 +1,17 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase_todo/common/models/todo.dart';
 import 'package:supabase_todo/common/providers/supabase.dart';
 import 'package:supabase_todo/features/auth/controller/auth_controller.dart';
-import 'package:supabase_todo/models/todo.dart';
 
 part 'todo_controller.g.dart';
 
 @Riverpod(dependencies: [])
 TodoModel todo(TodoRef ref) {
-  return TodoModel.fromMap({});
+  return TodoModel.fromJson({});
 }
 
 @riverpod
@@ -40,21 +41,31 @@ class TodoController {
         .from(_todosTable)
         .stream(primaryKey: ["id"])
         .eq("user_id", _user!.id)
-        .map((event) => (event.map((e) => TodoModel.fromMap(e)).toList()));
+        .map((event) => (event.map((e) => TodoModel.fromJson(e)).toList()));
   }
 
   Future<void> addTodo(TodoModel todo) async {
-    return _client.from(_todosTable).insert(todo.toMap());
+    return _client
+        .from(_todosTable)
+        .insert(todo.toJson()..removeWhere((k, v) => v == null));
   }
 
   Future<void> removeTodo(TodoModel todo) async {
-    await _client.from(_todosTable).delete().eq("id", todo.id);
+    try {
+      await _client.from(_todosTable).delete().eq("id", todo.id);
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
   Future<void> toggleTodo(TodoModel todo) async {
-    await _client
-        .from(_todosTable)
-        .update(todo.copyWith(status: !todo.status).toMap())
-        .eq("id", todo.id);
+    try {
+      await _client
+          .from(_todosTable)
+          .update(todo.copyWith(status: !todo.status).toJson())
+          .eq("id", todo.id);
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 }
